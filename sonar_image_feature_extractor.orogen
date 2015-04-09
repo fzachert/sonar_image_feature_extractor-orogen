@@ -1,0 +1,53 @@
+name "sonar_image_feature_extractor"
+# Optionally declare the version number
+# version "0.1"
+
+
+using_library "sonar_image_feature_extractor"
+
+#import_types_from "sonar_image_feature_extractorTypes.hpp"
+import_types_from "sonar_image_feature_extractor/DetectorTypes.hpp"
+import_types_from "base"
+
+
+task_context "Task" do
+
+    needs_configuration
+    
+    property("debug", "int", 0).dynamic.
+    doc("Debug image, 0: none, 1: blured image, 2 hessian image, 3 threshold image, 4 cluster")
+    
+    property("blur", "int", 5).dynamic.
+    doc("Size of the blur-filter, number must be odd")
+    
+    property("sobel", "int", 5).dynamic.
+    doc("Size of the sobel-filter, number must be odd")
+    
+    property("threshold", "double", 0.5).dynamic.
+    doc("Relative threshold for the binary image")
+    
+    property("morph", "int", 0).dynamic.
+    doc("Size of the morphologic filter for the closing-operation. Set to 0 to deactivate")
+    
+    property("cluster_min_size", "int", 20).dynamic
+    property("cluster_max_size", "int", 50).dynamic
+    property("cluster_noise", "int", 3).dynamic
+    
+    property("ignore_min_range", "double", 3).
+    doc("Ignore the first x meter of the sonar-image")
+    
+    property("max_sonar_range", "double", 20).
+    doc("Maximum range of the sonar")
+    
+    property("sonar_opening_angle", "double", 45).    .
+    doc("Opening angle of the sonar in degree")
+    
+    input_port("sonar_image", "base/samples/frame/Frame")
+    
+    output_port("debug_frame", "base/samples/frame/Frame")
+    output_port("detected_buoy", "sonar_image_feature_extractor/SonarFeatures")
+
+
+    port_driven "sonar_image"
+end
+
