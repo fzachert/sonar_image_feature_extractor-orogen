@@ -42,7 +42,9 @@ tasks/Task.cpp, and will be put in the sonar_image_feature_extractor namespace.
 
         virtual bool setCluster_noise(boost::int32_t value);
 
-        virtual bool setDebug(boost::int32_t value);
+        virtual bool setDebug_mode(DEBUG_MODE value);
+	
+	virtual bool setSmooth_mode(SMOOTH_MODE value);
 	
 	virtual bool setMorph(boost::int32_t value);
 

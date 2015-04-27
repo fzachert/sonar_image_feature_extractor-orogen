@@ -29,7 +29,7 @@ bool Task::configureHook()
     if (! TaskBase::configureHook())
         return false;
     
-      config.debug_mode = _debug.get();
+      config.debug_mode = _debug_mode.get();
       config.blur = _blur.get();
       config.morph = _morph.get();
       config.sobel = _sobel.get();
@@ -55,9 +55,13 @@ bool Task::startHook()
 }
 void Task::updateHook()
 {
-    TaskBase::updateHook();
+    TaskBase::updateHook();    
     
     base::samples::frame::Frame frame, debug_frame;
+    
+      config.debug_mode = _debug_mode.get();
+      config.smooth_mode = _smooth_mode.get();
+      
       if(_sonar_image.read(frame) == RTT::NewData){
       
       SonarFeatures feat = detector.detect(frame, debug_frame, config); 
@@ -101,15 +105,22 @@ bool Task::setCluster_noise(boost::int32_t value)
  return(sonar_image_feature_extractor::TaskBase::setCluster_noise(value));
 }
 
-bool Task::setDebug(boost::int32_t value)
+bool Task::setDebug_mode(DEBUG_MODE value)
 {
+  std::cout << "setDebugMode" << std::endl;
   config.debug_mode = value;
- return(sonar_image_feature_extractor::TaskBase::setDebug(value));
+ return(sonar_image_feature_extractor::TaskBase::setDebug_mode(value));
+}
+
+bool Task::setSmooth_mode(SMOOTH_MODE value)
+{
+  config.smooth_mode = value;
+ return(sonar_image_feature_extractor::TaskBase::setSmooth_mode(value));
 }
 
 bool Task::setMorph(boost::int32_t value)
 {
-  config.debug_mode = value;
+  config.morph = value;
 return(sonar_image_feature_extractor::TaskBase::setMorph(value));  
 }
 

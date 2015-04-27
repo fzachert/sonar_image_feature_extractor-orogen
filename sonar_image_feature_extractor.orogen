@@ -14,8 +14,11 @@ task_context "Task" do
 
     needs_configuration
     
-    property("debug", "int", 0).dynamic.
-    doc("Debug image, 0: none, 1: blured image, 2 hessian image, 3 threshold image, 4 cluster")
+    property("debug_mode", "sonar_image_feature_extractor/DEBUG_MODE", :NO_DEBUG).dynamic.
+    doc("Debug image, 0: NO_DEBUG, 1: SMOOTHING, 2: SOBEL, 3: THRESHOLD, 4: FEATURES")
+    
+    property("smooth_mode", "sonar_image_feature_extractor/SMOOTH_MODE", :GAUSSIAN).dynamic.
+    doc("smoothing-algrithm, 0: GAUSSIAN, 1: AVG, 2 MEDIA")
     
     property("blur", "int", 5).dynamic.
     doc("Size of the blur-filter, number must be odd")
@@ -39,7 +42,7 @@ task_context "Task" do
     property("max_sonar_range", "double", 20).
     doc("Maximum range of the sonar")
     
-    property("sonar_opening_angle", "double", 45).    .
+    property("sonar_opening_angle", "double", 45).
     doc("Opening angle of the sonar in degree")
     
     input_port("sonar_image", "base/samples/frame/Frame")
