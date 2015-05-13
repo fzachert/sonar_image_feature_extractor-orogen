@@ -66,6 +66,7 @@ task_context "SonarBeamProcessing" do
   property("debug_mode", "sonar_image_feature_extractor/DEBUG_MODE", :NO_DEBUG).dynamic.
   doc("Debug image, 0: NO_DEBUG, 1: SMOOTHING, 2: SOBEL, 3: THRESHOLD, 4: FEATURES")
   
+  property("blur", "int", 2).dynamic
   property("threshold", "double", 0.5).dynamic.
   doc("Relative threshold for the binary image")
     

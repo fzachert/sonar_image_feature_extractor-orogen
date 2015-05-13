@@ -4,6 +4,7 @@
 #define SONAR_IMAGE_FEATURE_EXTRACTOR_SONARBEAMPROCESSING_TASK_HPP
 
 #include "sonar_image_feature_extractor/SonarBeamProcessingBase.hpp"
+#include <sonar_image_feature_extractor/SonarProcessing.hpp>
 
 namespace sonar_image_feature_extractor {
 
@@ -25,7 +26,12 @@ namespace sonar_image_feature_extractor {
     {
 	friend class SonarBeamProcessingBase;
     protected:
+      
+	SonarProcessing detector;
+	DetectorConfig config;
 
+	virtual bool setBlur(boost::int32_t value);
+	
         virtual bool setCluster_max_size(boost::int32_t value);
 
         virtual bool setCluster_min_size(boost::int32_t value);
