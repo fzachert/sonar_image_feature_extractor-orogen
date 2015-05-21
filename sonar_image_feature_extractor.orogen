@@ -65,10 +65,20 @@ task_context "SonarBeamProcessing" do
 
   property("debug_mode", "sonar_image_feature_extractor/DEBUG_MODE", :NO_DEBUG).dynamic.
   doc("Debug image, 0: NO_DEBUG, 1: SMOOTHING, 2: SOBEL, 3: THRESHOLD, 4: FEATURES")
+    
+    property("smooth_mode", "sonar_image_feature_extractor/SMOOTH_MODE", :GAUSSIAN).dynamic.
+    doc("smoothing-algrithm, 0: GAUSSIAN, 1: AVG, 2 MEDIAN")
+    
+    property("threshold_mode", "sonar_image_feature_extractor/THRESHOLD_MODE", :ABSOLUTE).dynamic.
+    doc("Threshold-Algorithm, 0: ABSOLUTE -> absolute threshold in percent, 1: ADAPTIVE_MEAN adaptive threshold with the mean of neighborhood").
+    doc(" 2: ADAPTIVE_GAUSSIAN -> threshold is the weighted mean of neighborhoo, 3: OTSU")
+   
   
   property("blur", "int", 2).dynamic
   property("threshold", "double", 0.5).dynamic.
   doc("Relative threshold for the binary image")
+  
+  property("adaptive_threshold_neighborhood", "int", 9).dynamic
     
   property("cluster_min_size", "int", 20).dynamic
   property("cluster_max_size", "int", 50).dynamic

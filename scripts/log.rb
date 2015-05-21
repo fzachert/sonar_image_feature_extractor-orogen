@@ -10,14 +10,15 @@ Orocos.run "sonar_image_feature_extractor::Task" =>"sife"   do
   #auto connect
   log.blueview.frame.connect_to sife.sonar_image
   
-  sife.debug_mode = :FEATURES
-  sife.smooth_mode = :GAUSSIAN
-  sife.blur = 9
-  sife.sobel = 3
+  sife.debug_mode = :SMOOTHING
+  sife.smooth_mode = :GAUSSIAN 
+  sife.threshold_mode = :ADAPTIVE_GAUSSIAN
+  sife.blur = 9 #3
+  sife.sobel = 0#3
   sife.threshold = 0.5
   sife.cluster_min_size = 5
   sife.cluster_max_size = 50
-  sife.cluster_noise = 3
+  sife.cluster_noise = 1
   
   sife.configure
   sife.start

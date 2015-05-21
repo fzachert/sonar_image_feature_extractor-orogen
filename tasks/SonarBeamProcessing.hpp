@@ -40,7 +40,13 @@ namespace sonar_image_feature_extractor {
 
         virtual bool setDebug_mode(::sonar_image_feature_extractor::DEBUG_MODE const & value);
 
+	virtual bool setSmooth_mode(::sonar_image_feature_extractor::SMOOTH_MODE const & value);
+	
+	virtual bool setThreshold_mode(::sonar_image_feature_extractor::THRESHOLD_MODE const &value);	
+	
         virtual bool setThreshold(double value);
+	
+	virtual bool setAdaptive_threshold_neighborhood(boost::int32_t value);
 
     public:
         /** TaskContext constructor for SonarBeamProcessing
