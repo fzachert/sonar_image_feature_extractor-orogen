@@ -30,29 +30,7 @@ tasks/Task.cpp, and will be put in the sonar_image_feature_extractor namespace.
     {
 	friend class ImageProcessingBase;
     protected:
-	Detector detector;
-	DetectorConfig config;
-	
-	
-        virtual bool setBlur(boost::int32_t value);
-
-        virtual bool setCluster_max_size(boost::int32_t value);
-
-        virtual bool setCluster_min_size(boost::int32_t value);
-
-        virtual bool setCluster_noise(boost::int32_t value);
-
-        virtual bool setDebug_mode(DEBUG_MODE value);
-	
-	virtual bool setSmooth_mode(SMOOTH_MODE value);
-	
-	virtual bool setThreshold_mode(THRESHOLD_MODE value);
-	
-	virtual bool setMorph(boost::int32_t value);
-
-        virtual bool setSobel(boost::int32_t value);
-
-        virtual bool setThreshold(double value);	
+	Detector detector;	
 
 
     public:

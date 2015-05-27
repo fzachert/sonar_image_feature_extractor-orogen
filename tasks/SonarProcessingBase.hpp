@@ -1,51 +1,72 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.hpp */
 
-#ifndef SONAR_IMAGE_FEATURE_EXTRACTOR_SONARBEAMPROCESSING_TASK_HPP
-#define SONAR_IMAGE_FEATURE_EXTRACTOR_SONARBEAMPROCESSING_TASK_HPP
+#ifndef SONAR_IMAGE_FEATURE_EXTRACTOR_SONARPROCESSINGBASE_TASK_HPP
+#define SONAR_IMAGE_FEATURE_EXTRACTOR_SONARPROCESSINGBASE_TASK_HPP
 
-#include "sonar_image_feature_extractor/SonarBeamProcessingBase.hpp"
-#include <sonar_image_feature_extractor/SonarProcessing.hpp>
+#include "sonar_image_feature_extractor/SonarProcessingBaseBase.hpp"
 
 namespace sonar_image_feature_extractor {
 
-    /*! \class SonarBeamProcessing 
+    /*! \class SonarProcessingBase 
      * \brief The task context provides and requires services. It uses an ExecutionEngine to perform its functions.
      * Essential interfaces are operations, data flow ports and properties. These interfaces have been defined using the oroGen specification.
      * In order to modify the interfaces you should (re)use oroGen and rely on the associated workflow.
-     * This task uses signal-rpocessing on single sonar_beams to detect sonar-features
+     * 
      * \details
      * The name of a TaskContext is primarily defined via:
      \verbatim
      deployment 'deployment_name'
-         task('custom_task_name','sonar_image_feature_extractor::SonarBeamProcessing')
+         task('custom_task_name','sonar_image_feature_extractor::SonarProcessingBase')
      end
      \endverbatim
      *  It can be dynamically adapted when the deployment is called with a prefix argument. 
      */
-    class SonarBeamProcessing : public SonarBeamProcessingBase
+    class SonarProcessingBase : public SonarProcessingBaseBase
     {
-	friend class SonarBeamProcessingBase;
+	friend class SonarProcessingBaseBase;
     protected:
+
+	DetectorConfig config;
       
-	SonarProcessing detector;
+        virtual bool setAdaptive_threshold_neighborhood(boost::int32_t value);
+
+        virtual bool setBlur(boost::int32_t value);
+
+        virtual bool setCluster_max_size(boost::int32_t value);
+
+        virtual bool setCluster_min_size(boost::int32_t value);
+
+        virtual bool setCluster_noise(boost::int32_t value);
+
+        virtual bool setDebug_mode(::sonar_image_feature_extractor::DEBUG_MODE const & value);
+
+        virtual bool setMorph(boost::int32_t value);
+
+        virtual bool setSmooth_mode(::sonar_image_feature_extractor::SMOOTH_MODE const & value);
+
+        virtual bool setSobel(boost::int32_t value);
+
+        virtual bool setThreshold(double value);
+
+        virtual bool setThreshold_mode(::sonar_image_feature_extractor::THRESHOLD_MODE const & value);
 
     public:
-        /** TaskContext constructor for SonarBeamProcessing
+        /** TaskContext constructor for SonarProcessingBase
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
          * \param initial_state The initial TaskState of the TaskContext. Default is Stopped state.
          */
-        SonarBeamProcessing(std::string const& name = "sonar_image_feature_extractor::SonarBeamProcessing", TaskCore::TaskState initial_state = Stopped);
+        SonarProcessingBase(std::string const& name = "sonar_image_feature_extractor::SonarProcessingBase", TaskCore::TaskState initial_state = Stopped);
 
-        /** TaskContext constructor for SonarBeamProcessing 
+        /** TaskContext constructor for SonarProcessingBase 
          * \param name Name of the task. This name needs to be unique to make it identifiable for nameservices. 
          * \param engine The RTT Execution engine to be used for this task, which serialises the execution of all commands, programs, state machines and incoming events for a task. 
          * \param initial_state The initial TaskState of the TaskContext. Default is Stopped state.
          */
-        SonarBeamProcessing(std::string const& name, RTT::ExecutionEngine* engine, TaskCore::TaskState initial_state = Stopped);
+        SonarProcessingBase(std::string const& name, RTT::ExecutionEngine* engine, TaskCore::TaskState initial_state = Stopped);
 
-        /** Default deconstructor of SonarBeamProcessing
+        /** Default deconstructor of SonarProcessingBase
          */
-	~SonarBeamProcessing();
+	~SonarProcessingBase();
 
         /** This hook is called by Orocos when the state machine transitions
          * from PreOperational to Stopped. If it returns false, then the
@@ -86,24 +107,6 @@ namespace sonar_image_feature_extractor {
          */
         void updateHook();
 
-        /** This hook is called by Orocos when the component is in the
-         * RunTimeError state, at each activity step. See the discussion in
-         * updateHook() about triggering options.
-         *
-         * Call recover() to go back in the Runtime state.
-         */
-        void errorHook();
-
-        /** This hook is called by Orocos when the state machine transitions
-         * from Running to Stopped after stop() has been called.
-         */
-        void stopHook();
-
-        /** This hook is called by Orocos when the state machine transitions
-         * from Stopped to PreOperational, requiring the call to configureHook()
-         * before calling start() again.
-         */
-        void cleanupHook();
     };
 }
 

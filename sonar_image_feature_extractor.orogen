@@ -9,10 +9,8 @@ using_library "sonar_image_feature_extractor"
 import_types_from "sonar_image_feature_extractor/DetectorTypes.hpp"
 import_types_from "base"
 
-#This task uses image-processing in the cartesian space to detect sonar-features
-task_context "ImageProcessing" do
-
-    needs_configuration
+task_context "SonarProcessingBase" do
+    abstract
     
     property("debug_mode", "sonar_image_feature_extractor/DEBUG_MODE", :NO_DEBUG).dynamic.
     doc("Debug image, 0: NO_DEBUG, 1: SMOOTHING, 2: SOBEL, 3: THRESHOLD, 4: FEATURES")
@@ -47,7 +45,17 @@ task_context "ImageProcessing" do
     doc("Maximum range of the sonar")
     
     property("sonar_opening_angle", "double", 45).
-    doc("Opening angle of the sonar in degree")
+    doc("Opening angle of the sonar in degree")    
+    
+    property("adaptive_threshold_neighborhood", "int", 9).dynamic
+    
+end
+
+
+#This task uses image-processing in the cartesian space to detect sonar-features
+task_context "ImageProcessing" do
+    subclasses "SonarProcessingBase"
+    needs_configuration
     
     input_port("sonar_image", "base/samples/frame/Frame")
     
@@ -60,31 +68,10 @@ end
 
 #This task uses signal-rpocessing on single sonar_beams to detect sonar-features
 task_context "SonarBeamProcessing" do
+  subclasses "SonarProcessingBase"
   
   input_port("sonar_image", "base/samples/SonarScan")
 
-  property("debug_mode", "sonar_image_feature_extractor/DEBUG_MODE", :NO_DEBUG).dynamic.
-  doc("Debug image, 0: NO_DEBUG, 1: SMOOTHING, 2: SOBEL, 3: THRESHOLD, 4: FEATURES")
-    
-    property("smooth_mode", "sonar_image_feature_extractor/SMOOTH_MODE", :GAUSSIAN).dynamic.
-    doc("smoothing-algrithm, 0: GAUSSIAN, 1: AVG, 2 MEDIAN")
-    
-    property("threshold_mode", "sonar_image_feature_extractor/THRESHOLD_MODE", :ABSOLUTE).dynamic.
-    doc("Threshold-Algorithm, 0: ABSOLUTE -> absolute threshold in percent, 1: ADAPTIVE_MEAN adaptive threshold with the mean of neighborhood").
-    doc(" 2: ADAPTIVE_GAUSSIAN -> threshold is the weighted mean of neighborhoo, 3: OTSU")
-   
-  
-  property("blur", "int", 2).dynamic
-  property("threshold", "double", 0.5).dynamic.
-  doc("Relative threshold for the binary image")
-  
-  property("adaptive_threshold_neighborhood", "int", 9).dynamic
-    
-  property("cluster_min_size", "int", 20).dynamic
-  property("cluster_max_size", "int", 50).dynamic
-  property("cluster_noise", "int", 3).dynamic
-  
-  
   output_port("debug_frame", "base/samples/SonarScan")
   output_port("detected_buoy", "sonar_image_feature_extractor/SonarFeatures")
   
