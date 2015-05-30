@@ -17,11 +17,20 @@ Orocos.run "sonar_image_feature_extractor::SonarBeamProcessing" =>"sife", "gemin
   gem.toogle = true
   
   sife.debug_mode = :SMOOTHING
-  sife.blur = 9 #3
-  sife.threshold = 0.5
-  sife.cluster_min_size = 5
-  sife.cluster_max_size = 50
-  sife.cluster_noise = 1
+  sife.smooth_mode = :AVG
+  sife.threshold_mode = :ADAPTIVE_MEAN
+  sife.distance_mode = :EUKLIDIAN
+  
+  sife.blur = 3
+  sife.threshold = 0.15
+  sife.adaptive_threshold_neighborhood = 15  
+  
+  sife.cluster_min_size = 20
+  sife.cluster_max_size = 1000000
+  sife.cluster_noise = 0.5
+  
+  
+  sife.max_sonar_range = 16
   
   sife.configure
   sife.start

@@ -46,10 +46,16 @@ bool SonarProcessingBase::setCluster_min_size(boost::int32_t value)
  return(sonar_image_feature_extractor::SonarProcessingBaseBase::setCluster_min_size(value));
 }
 
-bool SonarProcessingBase::setCluster_noise(boost::int32_t value)
+bool SonarProcessingBase::setCluster_noise(double value)
 {
   config.cluster_noise = value;
  return(sonar_image_feature_extractor::SonarProcessingBaseBase::setCluster_noise(value));
+}
+
+bool SonarProcessingBase::setDistance_mode(::sonar_image_feature_extractor::DISTANCE_MODE const & value)
+{
+  config.distance_mode = value;
+  return(sonar_image_feature_extractor::SonarProcessingBaseBase::setDistance_mode(value));
 }
 
 bool SonarProcessingBase::setDebug_mode(::sonar_image_feature_extractor::DEBUG_MODE const & value)
@@ -109,6 +115,7 @@ bool SonarProcessingBase::configureHook()
     config.smooth_mode = _smooth_mode.get();
     config.debug_mode = _debug_mode.get();
     config.threshold_mode = _threshold_mode.get();
+    config.distance_mode = _distance_mode.get();
     
     config.sonar_max_range = _max_sonar_range.get();
     config.sonar_opening_angle = _sonar_opening_angle.get();
@@ -126,7 +133,8 @@ void SonarProcessingBase::updateHook()
 {
     config.smooth_mode = _smooth_mode.get();
     config.debug_mode = _debug_mode.get();
-    config.threshold_mode = _threshold_mode.get();  
+    config.threshold_mode = _threshold_mode.get();
+    config.distance_mode = _distance_mode.get();
   
   
     SonarProcessingBaseBase::updateHook();  

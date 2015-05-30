@@ -22,6 +22,10 @@ task_context "SonarProcessingBase" do
     doc("Threshold-Algorithm, 0: ABSOLUTE -> absolute threshold in percent, 1: ADAPTIVE_MEAN adaptive threshold with the mean of neighborhood").
     doc(" 2: ADAPTIVE_GAUSSIAN -> threshold is the weighted mean of neighborhoo, 3: OTSU")
     
+    property("distance_mode", "sonar_image_feature_extractor/DISTANCE_MODE", :EUKLIDIAN).dynamic.
+    doc("Distance-function for the clustering-algorithm").
+    doc(" 0: EUKLIDIAN  1: MAHALANOBIS")
+    
     property("blur", "int", 5).dynamic.
     doc("Size of the blur-filter, number must be odd")
     
@@ -36,7 +40,7 @@ task_context "SonarProcessingBase" do
     
     property("cluster_min_size", "int", 20).dynamic
     property("cluster_max_size", "int", 50).dynamic
-    property("cluster_noise", "int", 3).dynamic
+    property("cluster_noise", "double", 1).dynamic
     
     property("ignore_min_range", "double", 3).
     doc("Ignore the first x meter of the sonar-image")
@@ -73,6 +77,7 @@ task_context "SonarBeamProcessing" do
   input_port("sonar_image", "base/samples/SonarScan")
 
   output_port("debug_frame", "base/samples/SonarScan")
+  output_port("debug_data", "sonar_image_feature_extractor/DebugData")
   output_port("detected_buoy", "sonar_image_feature_extractor/SonarFeatures")
   
   port_driven "sonar_image"

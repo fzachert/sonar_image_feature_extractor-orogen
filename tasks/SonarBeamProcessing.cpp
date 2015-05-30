@@ -47,12 +47,16 @@ void SonarBeamProcessing::updateHook()
     
     
     base::samples::SonarScan input, debug;
+    DebugData dd;
     
     while(_sonar_image.read(input) == RTT::NewData){
       
-      SonarFeatures feat = detector.detect(input, debug, config);
+      SonarFeatures feat = detector.detect(input, debug, config, dd);
       
       _debug_frame.write(debug);
+      _debug_data.write(dd);
+      
+      _detected_buoy.write(feat);
       
     }
     
