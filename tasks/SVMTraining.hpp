@@ -1,52 +1,50 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.hpp */
 
-#ifndef SONAR_IMAGE_FEATURE_EXTRACTOR_SONARBEAMPROCESSING_TASK_HPP
-#define SONAR_IMAGE_FEATURE_EXTRACTOR_SONARBEAMPROCESSING_TASK_HPP
+#ifndef SONAR_IMAGE_FEATURE_EXTRACTOR_SVMTRAINING_TASK_HPP
+#define SONAR_IMAGE_FEATURE_EXTRACTOR_SVMTRAINING_TASK_HPP
 
-#include "sonar_image_feature_extractor/SonarBeamProcessingBase.hpp"
-#include <sonar_image_feature_extractor/SonarProcessing.hpp>
+#include "sonar_image_feature_extractor/SVMTrainingBase.hpp"
 
 namespace sonar_image_feature_extractor {
 
-    /*! \class SonarBeamProcessing 
+    /*! \class SVMTraining 
      * \brief The task context provides and requires services. It uses an ExecutionEngine to perform its functions.
      * Essential interfaces are operations, data flow ports and properties. These interfaces have been defined using the oroGen specification.
      * In order to modify the interfaces you should (re)use oroGen and rely on the associated workflow.
-     * This task uses signal-rpocessing on single sonar_beams to detect sonar-features
+     * 
      * \details
      * The name of a TaskContext is primarily defined via:
      \verbatim
      deployment 'deployment_name'
-         task('custom_task_name','sonar_image_feature_extractor::SonarBeamProcessing')
+         task('custom_task_name','sonar_image_feature_extractor::SVMTraining')
      end
      \endverbatim
      *  It can be dynamically adapted when the deployment is called with a prefix argument. 
      */
-    class SonarBeamProcessing : public SonarBeamProcessingBase
+    class SVMTraining : public SVMTrainingBase
     {
-	friend class SonarBeamProcessingBase;
+	friend class SVMTrainingBase;
     protected:
-      
-	SonarProcessing detector;
-	SVMConfig svm_config;
+
+
 
     public:
-        /** TaskContext constructor for SonarBeamProcessing
+        /** TaskContext constructor for SVMTraining
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
          * \param initial_state The initial TaskState of the TaskContext. Default is Stopped state.
          */
-        SonarBeamProcessing(std::string const& name = "sonar_image_feature_extractor::SonarBeamProcessing", TaskCore::TaskState initial_state = Stopped);
+        SVMTraining(std::string const& name = "sonar_image_feature_extractor::SVMTraining", TaskCore::TaskState initial_state = Stopped);
 
-        /** TaskContext constructor for SonarBeamProcessing 
+        /** TaskContext constructor for SVMTraining 
          * \param name Name of the task. This name needs to be unique to make it identifiable for nameservices. 
          * \param engine The RTT Execution engine to be used for this task, which serialises the execution of all commands, programs, state machines and incoming events for a task. 
          * \param initial_state The initial TaskState of the TaskContext. Default is Stopped state.
          */
-        SonarBeamProcessing(std::string const& name, RTT::ExecutionEngine* engine, TaskCore::TaskState initial_state = Stopped);
+        SVMTraining(std::string const& name, RTT::ExecutionEngine* engine, TaskCore::TaskState initial_state = Stopped);
 
-        /** Default deconstructor of SonarBeamProcessing
+        /** Default deconstructor of SVMTraining
          */
-	~SonarBeamProcessing();
+	~SVMTraining();
 
         /** This hook is called by Orocos when the state machine transitions
          * from PreOperational to Stopped. If it returns false, then the

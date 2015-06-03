@@ -7,6 +7,7 @@ using_library "sonar_image_feature_extractor"
 
 #import_types_from "sonar_image_feature_extractorTypes.hpp"
 import_types_from "sonar_image_feature_extractor/DetectorTypes.hpp"
+import_types_from "sonar_image_feature_extractor/ClassificationTypes.hpp"
 import_types_from "base"
 
 task_context "SonarProcessingBase" do
@@ -74,6 +75,8 @@ end
 task_context "SonarBeamProcessing" do
   subclasses "SonarProcessingBase"
   
+  property("svm_config", "sonar_image_feature_extractor/SVMConfig")
+  
   input_port("sonar_image", "base/samples/SonarScan")
 
   output_port("debug_frame", "base/samples/SonarScan")
@@ -83,4 +86,26 @@ task_context "SonarBeamProcessing" do
   port_driven "sonar_image"
   
 end
+
+
+task_context "LabelCreator" do
+  subclasses "SonarProcessingBase"
+
+  input_port("input_scans", "base/samples/SonarScan")
+  
+  output_port("labeled_cluster", "sonar_image_feature_extractor/LabeledCluster")
+  
+  property("id", "double", 0)
+  property("pos", "base/Vector2d")  
+
+end
+
+
+task_context "SVMTraining" do 
+
+  input_port("labeled_cluster", "sonar_image_feature_extractor/LabeledCluster")
+  
+  property("svm_config", "sonar_image_feature_extractor/SVMConfig")
+
+  end
 

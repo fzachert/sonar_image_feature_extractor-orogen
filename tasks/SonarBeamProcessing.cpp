@@ -30,6 +30,8 @@ bool SonarBeamProcessing::configureHook()
     if (! SonarBeamProcessingBase::configureHook())
         return false;
     
+    svm_config = _svm_config.get();
+    
     return true;
 }
 bool SonarBeamProcessing::startHook()
