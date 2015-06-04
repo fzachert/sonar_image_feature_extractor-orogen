@@ -42,19 +42,24 @@ void LabelCreator::updateHook()
     
     base::samples::SonarScan scan;
     LabeledCluster lc;
+    std::vector<LabeledCluster> lcs;
     Label l;
     DebugData dd;
     
     while(_input_scans.read(scan) == RTT::NewData){
       
       if(_id != 0.0){
-	l.pos = _pos.get();
+	l.pos.x() = _label_x.get();
+	l.pos.y() = _label_y.get();
 	l.label_id = _id.get();
 	
-	lc = detector.label_cluster(scan, config, dd,  l);
+	lcs = detector.label_cluster(scan, config, dd,  l);
 	
-	if( lc.label.label_id != 0.0){
-	  _labeled_cluster.write(lc);
+	for(std::vector<LabeledCluster>::iterator it = lcs.begin(); it != lcs.end(); it++){
+	
+	  if( it->label.label_id != 0.0){
+	    _labeled_cluster.write(*it);
+	  }
 	}
 	
       }

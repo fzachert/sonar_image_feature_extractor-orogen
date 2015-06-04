@@ -96,7 +96,10 @@ task_context "LabelCreator" do
   output_port("labeled_cluster", "sonar_image_feature_extractor/LabeledCluster")
   
   property("id", "double", 0)
-  property("pos", "base/Vector2d")  
+  property("label_x", "double", 0)
+  property("label_y", "double", 0)
+  
+  port_driven
 
 end
 
@@ -106,6 +109,10 @@ task_context "SVMTraining" do
   input_port("labeled_cluster", "sonar_image_feature_extractor/LabeledCluster")
   
   property("svm_config", "sonar_image_feature_extractor/SVMConfig")
+  
+  property("timeout", "double", 10.0)
+  
+  periodic 0.1
 
   end
 
