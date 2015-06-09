@@ -119,7 +119,9 @@ bool SonarProcessingBase::configureHook()
     
     config.sonar_max_range = _max_sonar_range.get();
     config.sonar_opening_angle = _sonar_opening_angle.get();
-    config.ignore_min_range = _ignore_min_range.get();    
+    config.ignore_min_range = _ignore_min_range.get(); 
+    
+    config.gemini = _gemini.get();
     
     return true;
 }

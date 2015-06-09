@@ -36,6 +36,7 @@ bool SVMTraining::startHook()
         return false;
     
     started = false;
+    finished = false;
     clusters.clear();
     labels.clear();
     
@@ -63,29 +64,36 @@ void SVMTraining::updateHook()
       
       last_time = base::Time::now();
       
-      clusters.push_back( lc.cluster);
-      labels.push_back( lc.label);
-      
       if(lc.label.label_id > 0){
 	positives++;
       }else if( lc.label.label_id < 0){
 	negatives++;
+	lc.label.label_id = 2.0;
       }
+      
+      clusters.push_back( lc.cluster);
+      labels.push_back( lc.label);      
       
     }
     
-    if( started && (base::Time::now().toSeconds() - last_time.toSeconds()) > _timeout.get()){
+    if( started && (base::Time::now().toSeconds() - last_time.toSeconds()) > _timeout.get() && !finished){
       
       std::cout << "----------------------------" << std::endl;
       std::cout << "Reading Data complete" << std::endl;
       std::cout << "Got " << clusters.size() << " samples with " << positives << " positives and " << negatives << " negatives." << std::endl;
       
-      if(classifier.learn( clusters, labels)){
-	std::cout << "Learning succesfull" << std::endl;
-      }
-      else{
-	std::cout << "Learning failed" << std::endl;
-      }
+      finished = true;
+      svm_conf.weights.clear();
+      svm_conf.weights.push_back(1.0);
+      svm_conf.weights.push_back( ((double)positives) / ((double)negatives) );
+      svm_conf.weight_labels.clear();
+      svm_conf.weight_labels.push_back(1.0);
+      svm_conf.weight_labels.push_back(2.0);
+      
+      SVMConfig sconf = classifier.learn( clusters, labels);
+      std::cout << "Learning Finished" << std::endl;
+      _svm_config.set( sconf);
+
       
     }
     

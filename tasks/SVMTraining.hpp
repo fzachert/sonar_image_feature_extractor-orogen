@@ -38,6 +38,7 @@ namespace sonar_image_feature_extractor {
 	
 	base::Time last_time;
 	bool started;
+	bool finished;
 	
 	int positives;
 	int negatives;

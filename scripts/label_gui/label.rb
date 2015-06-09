@@ -7,6 +7,9 @@ include Orocos
 log = Log::Replay.open('/home/fabio/gemini.0.log')
 
 Orocos.run "sonar_image_feature_extractor::LabelCreator" => "lc", "gemini_scan_converter::Task" =>"gem"  do
+  
+  Orocos.log_all
+  
   lc = Orocos.name_service.get('lc')
   gem = Orocos.name_service.get('gem')
 
@@ -47,7 +50,7 @@ Orocos.run "sonar_image_feature_extractor::LabelCreator" => "lc", "gemini_scan_c
 
   
   #Vizkit.display lc
-  Vizkit.display gem
+  Vizkit.display lc
   Vizkit.control log
   Vizkit.exec
 end

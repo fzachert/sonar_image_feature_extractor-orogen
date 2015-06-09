@@ -54,6 +54,8 @@ task_context "SonarProcessingBase" do
     
     property("adaptive_threshold_neighborhood", "int", 9).dynamic
     
+    property("gemini", "bool", true)
+    
 end
 
 
