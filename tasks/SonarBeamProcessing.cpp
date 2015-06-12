@@ -31,6 +31,7 @@ bool SonarBeamProcessing::configureHook()
         return false;
     
     svm_config = _svm_config.get();
+    ignore_labels = _ignore_labels.get();
     
     return true;
 }
@@ -39,7 +40,7 @@ bool SonarBeamProcessing::startHook()
     if (! SonarBeamProcessingBase::startHook())
         return false;
     
-    detector.init();
+    detector.init( svm_config);
     
     return true;
 }
@@ -53,15 +54,38 @@ void SonarBeamProcessing::updateHook()
     
     while(_sonar_image.read(input) == RTT::NewData){
       
+
+      base::Time start = base::Time::now();
       SonarFeatures feat = detector.detect(input, debug, config, dd);
+
+      for(std::vector<Feature>::iterator it_feat = feat.features.begin(); it_feat != feat.features.end(); ){
+	    
+	  bool ignore = false;
+
+	  for( std::vector<int>::iterator it_label = ignore_labels.begin(); it_label != ignore_labels.end(); it_label++){
+
+	      if( it_feat->desc.label == *it_label){
+		ignore = true;		
+	      }
+	      	    
+	  }	  
+	  
+	  if(ignore){
+
+	    it_feat = feat.features.erase(it_feat);
+
+	  }else{
+	    it_feat++;
+	  }
+	  
+      }
       
       _debug_frame.write(debug);
       _debug_data.write(dd);
       
       _detected_buoy.write(feat);
       
-    }
-    
+    }    
     
 }
 void SonarBeamProcessing::errorHook()

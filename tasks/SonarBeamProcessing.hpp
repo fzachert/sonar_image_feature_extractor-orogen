@@ -29,6 +29,7 @@ namespace sonar_image_feature_extractor {
       
 	SonarProcessing detector;
 	SVMConfig svm_config;
+	std::vector<int> ignore_labels;
 
     public:
         /** TaskContext constructor for SonarBeamProcessing
