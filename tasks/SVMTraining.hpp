@@ -32,6 +32,7 @@ namespace sonar_image_feature_extractor {
 	
 	std::vector<Cluster> clusters;
 	std::vector<Label> labels;
+	std::vector<int> label_count;
 	
 	Classifier classifier;
 	SVMConfig svm_conf;

@@ -115,6 +115,8 @@ task_context "SVMTraining" do
   
   property("timeout", "double", 10.0)
   
+  property("max_label", "int", 2)
+  
   periodic 0.1
 
   end
