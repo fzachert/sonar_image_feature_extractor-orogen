@@ -10,6 +10,10 @@ import_types_from "sonar_image_feature_extractor/DetectorTypes.hpp"
 import_types_from "sonar_image_feature_extractor/ClassificationTypes.hpp"
 import_types_from "base"
 
+
+###################################
+# Abstract base-task for sonar-processing
+# Contains sonar-processing-properties
 task_context "SonarProcessingBase" do
     abstract
     
@@ -34,14 +38,21 @@ task_context "SonarProcessingBase" do
     doc("Size of the sobel-filter, number must be odd")
     
     property("threshold", "double", 0.5).dynamic.
-    doc("Relative threshold for the binary image")
+    doc("Relative threshold for the binary image, should be between 0 and 1").
+    doc("If threshold-algorithm is ADAPTIVE_ ,this value is the local threshold-offset as fraction of the maximum value")
     
     property("morph", "int", 0).dynamic.
-    doc("Size of the morphologic filter for the closing-operation. Set to 0 to deactivate")
+    doc("Size of the morphologic filter for the closing-operation. Set to 0 to deactivate").
+    doc("Only usable in image-processing!")
     
-    property("cluster_min_size", "int", 20).dynamic
-    property("cluster_max_size", "int", 50).dynamic
-    property("cluster_noise", "double", 1).dynamic
+    property("cluster_min_size", "int", 20).dynamic.
+    doc("A cluster needs to have at least x datapoints. Otherwise the cluster is ignored")
+    
+    property("cluster_max_size", "int", 50).dynamic.
+    doc("A cluster is not allowed to have more than x datapoints. Bigger cluster will be ignored")
+    
+    property("cluster_noise", "double", 1).dynamic.
+    doc("Noise-value for the dbsan-clustering-algorithm")
     
     property("ignore_min_range", "double", 3).
     doc("Ignore the first x meter of the sonar-image")
@@ -50,16 +61,22 @@ task_context "SonarProcessingBase" do
     doc("Maximum range of the sonar")
     
     property("sonar_opening_angle", "double", 45).
-    doc("Opening angle of the sonar in degree")    
+    doc("Opening angle of the sonar in degree").
+    doc("Value is only used in image-procssing")
     
-    property("adaptive_threshold_neighborhood", "int", 9).dynamic
+    property("adaptive_threshold_neighborhood", "int", 9).dynamic.
+    doc("If the threshold-algorithm is ADAPTIVE_ , this value defines the size of the local neighborhood")
     
-    property("gemini", "bool", true)
+    property("gemini", "bool", true).
+    doc("If a gemini-sonar is use, a speial mapping function is used, to calculate the bearing for each beam").
+    doc("Otherwiese the bearing is calulated by a start-bearing and a angular-resolution")
     
 end
 
 
 #This task uses image-processing in the cartesian space to detect sonar-features
+#Not finished
+#Use SonarBeamProcessing instead
 task_context "ImageProcessing" do
     subclasses "SonarProcessingBase"
     needs_configuration
@@ -73,49 +90,85 @@ task_context "ImageProcessing" do
     port_driven "sonar_image"
 end
 
-#This task uses signal-rpocessing on single sonar_beams to detect sonar-features
+#This task uses signal-processing on single sonar_beams to detect sonar-features
+#Signal processing is applied on single-sonarbeams of a sonar-scan
+#Peaks from the the single beams are clustered to objects
+#The identified clusters are classified using svm
 task_context "SonarBeamProcessing" do
   subclasses "SonarProcessingBase"
   
-  property("svm_config", "sonar_image_feature_extractor/SVMConfig")
-  property("ignore_labels", "std/vector<int>")
+  property("svm_config", "sonar_image_feature_extractor/SVMConfig").
+  doc("SVM-Configuration for the classification of sonar-cluster")  
   
-  input_port("sonar_image", "base/samples/SonarScan")
+  property("ignore_labels", "std/vector<int>").
+  doc("Do not write out features, which are labeled with a ingore-label").
+  doc("e.g. do not write out features, which are labeled as noise")
+  
+  
+  
+  
+  input_port("sonar_image", "base/samples/SonarScan").
+  doc("Input sonar-image, which should be processed")
+  
+  
+  
 
-  output_port("debug_frame", "base/samples/SonarScan")
-  output_port("debug_data", "sonar_image_feature_extractor/DebugData")
-  output_port("detected_buoy", "sonar_image_feature_extractor/SonarFeatures")
+  output_port("debug_frame", "base/samples/SonarScan").
+  doc("Debug-image of the processed sonar-scan").
+  doc("Use property debug_mode, to specify or disable the debug-output")
+  
+  output_port("debug_data", "sonar_image_feature_extractor/DebugData").
+  doc("Aditionale debug-output, eg. clusterdata ...")
+  
+  output_port("detected_buoy", "sonar_image_feature_extractor/SonarFeatures").
+  doc("Output of the detected and classified sonar-features")
   
   port_driven "sonar_image"
   
 end
 
 
+# This task is used to create labeled cluster-data, for the svm-learning-process
+# Use this task in combination with the label-gui in /scripts/label_gui/label.rb
 task_context "LabelCreator" do
   subclasses "SonarProcessingBase"
 
-  input_port("input_scans", "base/samples/SonarScan")
+  input_port("input_scans", "base/samples/SonarScan").
+  doc("Input sonar-scans")
   
-  output_port("labeled_cluster", "sonar_image_feature_extractor/LabeledCluster")
+  output_port("labeled_cluster", "sonar_image_feature_extractor/LabeledCluster").
+  doc("Extracted sonar-cluster with defined label")
   
-  property("id", "double", 0)
-  property("label_x", "double", 0)
-  property("label_y", "double", 0)
+  property("id", "double", 0).
+  doc("Label of the wanted output-label").
+  doc("If 0, no labeled-cluster will be writen out").
+  doc("If >0, the clustered, which is the nearest to the label-position will be written out")
+  doc("If -1, all extracted cluster are writen out, labeled with -1 as noise")
+  
+  property("label_x", "double", 0).
+  doc("X-position of the cluster, which should be labeled")
+  
+  property("label_y", "double", 0).
+  doc("Y-position of the cluster, which should be labeled")
   
   port_driven
 
 end
 
-
+# This task trains a svm for the clasification of sonar-clusteres
+# After the learning, the trained svm is written to the file-path, defined in the svm-config 
+# Also, the scalling-values are written to the svm_config-property. Save this properties after learning 
 task_context "SVMTraining" do 
 
   input_port("labeled_cluster", "sonar_image_feature_extractor/LabeledCluster")
   
   property("svm_config", "sonar_image_feature_extractor/SVMConfig")
   
-  property("timeout", "double", 10.0)
+  property("timeout", "double", 10.0).
+  doc("Start the learning-process, x seconds after the last recieved sample")
   
-  property("max_label", "int", 2)
+  property("max_label", "int", 2).
+  doc("Value of the label with the highest value")
   
   periodic 0.1
 
