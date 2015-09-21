@@ -64,6 +64,12 @@ bool SonarProcessingBase::setDebug_mode(::sonar_image_feature_extractor::DEBUG_M
  return(sonar_image_feature_extractor::SonarProcessingBaseBase::setDebug_mode(value));
 }
 
+bool SonarProcessingBase::setFeature_max_size(double value)
+{
+  config.feature_max_size = value;
+  return( sonar_image_feature_extractor::SonarProcessingBaseBase::setFeature_max_size(value));
+}
+
 bool SonarProcessingBase::setMorph(boost::int32_t value)
 {
   config.morph = value;
@@ -111,6 +117,7 @@ bool SonarProcessingBase::configureHook()
     config.cluster_min_size = _cluster_min_size.get();
     config.cluster_max_size = _cluster_max_size.get();
     config.cluster_noise = _cluster_noise.get();
+    config.feature_max_size = _feature_max_size.get();
     
     config.smooth_mode = _smooth_mode.get();
     config.debug_mode = _debug_mode.get();

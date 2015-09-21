@@ -54,6 +54,9 @@ task_context "SonarProcessingBase" do
     property("cluster_noise", "double", 1).dynamic.
     doc("Noise-value for the dbsan-clustering-algorithm")
     
+    property("feature_max_size", "double", 2.0).dynamic.
+    doc("Maximum size of features")
+    
     property("ignore_min_range", "double", 3).
     doc("Ignore the first x meter of the sonar-image")
     

@@ -80,7 +80,13 @@ void SonarBeamProcessing::updateHook()
 	  
       }
       
-      _debug_frame.write(debug);
+      if(config.debug_mode == DETECTED_FEATURES){
+	  detector.print_detected_features(feat, input, debug, config);	
+      }  
+      
+      if(config.debug_mode != NO_DEBUG){
+	_debug_frame.write(debug);
+      }
       _debug_data.write(dd);
       
       _detected_buoy.write(feat);

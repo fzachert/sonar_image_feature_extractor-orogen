@@ -39,9 +39,11 @@ namespace sonar_image_feature_extractor {
         virtual bool setCluster_noise(double value);
 	
 	virtual bool setDistance_mode(::sonar_image_feature_extractor::DISTANCE_MODE const & value);
-
+	
         virtual bool setDebug_mode(::sonar_image_feature_extractor::DEBUG_MODE const & value);
 
+	virtual bool setFeature_max_size(double value);	
+	
         virtual bool setMorph(boost::int32_t value);
 
         virtual bool setSmooth_mode(::sonar_image_feature_extractor::SMOOTH_MODE const & value);
