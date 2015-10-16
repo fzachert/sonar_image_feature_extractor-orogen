@@ -1,6 +1,7 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.cpp */
 
 #include "SonarBeamProcessing.hpp"
+#include "sonar_image_feature_extractor/ProcessingTools.hpp"
 
 using namespace sonar_image_feature_extractor;
 
@@ -85,8 +86,12 @@ void SonarBeamProcessing::updateHook()
       }  
       
       if(config.debug_mode != NO_DEBUG){
+	dd.center_beams = getCenterBeams( debug, 5);
 	_debug_frame.write(debug);
-      }
+      }else{
+	dd.center_beams = getCenterBeams( input, 5);
+      }     
+      
       _debug_data.write(dd);
       
       _detected_buoy.write(feat);
